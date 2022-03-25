@@ -88,10 +88,23 @@ namespace BeatSaberPresence {
             }
 
             if (pluginConfig.ShowImages) {
-                activity.Assets = new ActivityAssets {
-                    LargeImage = "beat_saber_logo",
-                    LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
-                };
+                IDifficultyBeatmap diff = gameplayCoreSceneSetupData.difficultyBeatmap;
+                IBeatmapLevel level = diff.level;
+                if (level.levelID.StartsWith("custom_level_")) {
+                    activity.Assets = new ActivityAssets
+                    {
+                        LargeImage = level.levelID.Replace("custom_level_", "https://eu.cdn.beatsaver.com/").ToLower() + ".jpg",
+                        LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
+                    };
+                }
+                else
+                {
+                    activity.Assets = new ActivityAssets
+                    {
+                        LargeImage = "beat_saber_logo",
+                        LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
+                    };
+                }
 
                 if (pluginConfig.ShowSmallImages) {
                     activity.Assets.SmallImage = "beat_saber_block";
