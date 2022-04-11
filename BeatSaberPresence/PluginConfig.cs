@@ -10,6 +10,7 @@ namespace BeatSaberPresence.Config {
         public virtual bool Enabled { get; set; } = true;
 
         public virtual bool ShowImages { get; set; } = true;
+        public virtual bool UseCoverImage { get; set; } = true;
         public virtual bool ShowSmallImages { get; set; } = true;
 
         public virtual bool ShowTimes { get; set; } = true;

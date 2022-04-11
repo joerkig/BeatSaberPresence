@@ -90,24 +90,14 @@ namespace BeatSaberPresence {
             if (pluginConfig.ShowImages) {
                 IDifficultyBeatmap diff = gameplayCoreSceneSetupData.difficultyBeatmap;
                 IBeatmapLevel level = diff.level;
-                if (level.levelID.StartsWith("custom_level_")) {
                     activity.Assets = new ActivityAssets
                     {
-                        LargeImage = level.levelID.Replace("custom_level_", "https://eu.cdn.beatsaver.com/").ToLower() + ".jpg",
+                        LargeImage = level.levelID.StartsWith("custom_level_") && pluginConfig.UseCoverImage ? level.levelID.Replace("custom_level_", "https://cdn.beatsaver.com/").ToLower() + ".jpg" : "beat_saber_logo",
                         LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
                     };
-                }
-                else
-                {
-                    activity.Assets = new ActivityAssets
-                    {
-                        LargeImage = "beat_saber_logo",
-                        LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
-                    };
-                }
 
                 if (pluginConfig.ShowSmallImages) {
-                    activity.Assets.SmallImage = "beat_saber_block";
+                    activity.Assets.SmallImage = diff.GetIdentifier().ToString().Split(':')[3].Split(']')[0].ToLower().Remove(0, 1) + diff.difficulty.Name().ToLower().Replace("+","_");
                     activity.Assets.SmallText = Format(paused ? pluginConfig.PauseSmallImageLine : pluginConfig.GameSmallImageLine);
                 }
             }

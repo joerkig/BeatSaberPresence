@@ -11,7 +11,7 @@ namespace BeatSaberPresence {
         private readonly UserManager userManager;
         private readonly PluginConfig pluginConfig;
         private readonly DiscordInstance discordInstance;
-        internal const long clientID = 708741346403287113;
+        internal const long clientID = 939893006453071902;
 
         private bool didInstantiateUserManagerProperly = true;
 

@@ -31,6 +31,12 @@ namespace BeatSaberPresence {
             set => pluginConfig.ShowImages = value;
         }
 
+        [UIValue("use-cover-image")]
+        public bool UseCoverImage {
+            get => pluginConfig.UseCoverImage;
+            set => pluginConfig.UseCoverImage = value;
+        }
+
         [UIValue("small-image")]
         public bool SmallImage {
             get => pluginConfig.ShowSmallImages;
