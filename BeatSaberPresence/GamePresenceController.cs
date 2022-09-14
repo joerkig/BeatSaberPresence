@@ -92,7 +92,7 @@ namespace BeatSaberPresence {
                 IDifficultyBeatmap diff = gameplayCoreSceneSetupData.difficultyBeatmap;
                 IBeatmapLevel level = diff.level;
                 bool exists = false;
-                if (pluginConfig.UseCoverImage)
+                if (level.levelID.StartsWith("custom_level_") && pluginConfig.UseCoverImage)
                 {
                     try
                     {
