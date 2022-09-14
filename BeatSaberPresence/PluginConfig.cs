@@ -12,6 +12,8 @@ namespace BeatSaberPresence.Config {
         public virtual bool ShowImages { get; set; } = true;
         public virtual bool UseCoverImage { get; set; } = true;
         public virtual bool ShowSmallImages { get; set; } = true;
+        public virtual bool ShowDifficulty { get; set; } = true;
+        public virtual bool ShowCharacteristic { get; set; } = true;
 
         public virtual bool ShowTimes { get; set; } = true;
         public virtual bool InGameCountDown { get; set; } = true;

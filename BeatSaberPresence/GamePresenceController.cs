@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Discord;
 using Zenject;
 using BeatSaberPresence.Config;
@@ -90,14 +91,30 @@ namespace BeatSaberPresence {
             if (pluginConfig.ShowImages) {
                 IDifficultyBeatmap diff = gameplayCoreSceneSetupData.difficultyBeatmap;
                 IBeatmapLevel level = diff.level;
+                bool exists = false;
+                if (pluginConfig.UseCoverImage)
+                {
+                    try
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            client.DownloadString(level.levelID.Replace("custom_level_", "https://cdn.beatsaver.com/").ToLower() + ".jpg");
+                            exists = true;
+                        }
+                    }
+                    catch (WebException)
+                    {
+                        exists = false;
+                    }
+                }
                     activity.Assets = new ActivityAssets
                     {
-                        LargeImage = level.levelID.StartsWith("custom_level_") && pluginConfig.UseCoverImage ? level.levelID.Replace("custom_level_", "https://cdn.beatsaver.com/").ToLower() + ".jpg" : "beat_saber_logo",
+                        LargeImage = level.levelID.StartsWith("custom_level_") && pluginConfig.UseCoverImage && exists ? level.levelID.Replace("custom_level_", "https://cdn.beatsaver.com/").ToLower() + ".jpg" : "beat_saber_logo",
                         LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
                     };
 
                 if (pluginConfig.ShowSmallImages) {
-                    activity.Assets.SmallImage = diff.GetIdentifier().ToString().Split(':')[3].Split(']')[0].ToLower().Remove(0, 1) + diff.difficulty.Name().ToLower().Replace("+","_");
+                    activity.Assets.SmallImage = pluginConfig.ShowCharacteristic || pluginConfig.ShowDifficulty ? (pluginConfig.ShowCharacteristic ? diff.GetIdentifier().beatmapCharacteristicSerializedName.ToLower() : "") + (pluginConfig.ShowDifficulty ? diff.difficulty.Name().ToLower().Replace("+", "_") : "") : "beat_saber_block";
                     activity.Assets.SmallText = Format(paused ? pluginConfig.PauseSmallImageLine : pluginConfig.GameSmallImageLine);
                 }
             }
@@ -124,6 +141,7 @@ namespace BeatSaberPresence {
             formattedString = formattedString.Replace("{SongDurationSeconds}", Math.Floor(level.beatmapLevelData.audioClip.length).ToString());
             formattedString = formattedString.Replace("{LevelAuthorName}", level.levelAuthorName);
             formattedString = formattedString.Replace("{Difficulty}", diff.difficulty.Name());
+            formattedString = formattedString.Replace("{Characteristic}", diff.GetIdentifier().beatmapCharacteristicSerializedName);
             formattedString = formattedString.Replace("{SongBPM}", level.beatsPerMinute.ToString());
             formattedString = formattedString.Replace("{LevelID}", level.levelID);
             formattedString = formattedString.Replace("{EnvironmentName}", level.environmentInfo.environmentName);

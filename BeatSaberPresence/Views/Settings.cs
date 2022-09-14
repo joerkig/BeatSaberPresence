@@ -43,6 +43,20 @@ namespace BeatSaberPresence {
             set => pluginConfig.ShowSmallImages = value;
         }
 
+        [UIValue("show-diff")]
+        public bool ShowDiff
+        {
+            get => pluginConfig.ShowDifficulty;
+            set => pluginConfig.ShowDifficulty = value;
+        }
+
+        [UIValue("show-char")]
+        public bool ShowChar
+        {
+            get => pluginConfig.ShowCharacteristic;
+            set => pluginConfig.ShowCharacteristic = value;
+        }
+
         [UIValue("timer")]
         public bool Timer {
             get => pluginConfig.ShowTimes;
