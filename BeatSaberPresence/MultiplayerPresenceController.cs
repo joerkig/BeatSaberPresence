@@ -11,14 +11,16 @@ namespace BeatSaberPresence {
         private Activity? pauseActivity;
 
         private readonly IGamePause gamePause;
+        private readonly Submission submission;
         private readonly RichPresenceManager richPresence;
         private readonly PluginConfig pluginConfig;
         private readonly PresenceController presenceController;
         private readonly AudioTimeSyncController audioTimeSyncController;
         private readonly GameplayCoreSceneSetupData gameplayCoreSceneSetupData;
 
-        internal MultiplayerPresenceManager([InjectOptional] IGamePause gamePause, PluginConfig pluginConfig, PresenceController presenceController, AudioTimeSyncController audioTimeSyncController, GameplayCoreSceneSetupData gameplayCoreSceneSetupData) {
+        internal MultiplayerPresenceManager([InjectOptional] IGamePause gamePause, [InjectOptional] Submission submission, PluginConfig pluginConfig, PresenceController presenceController, AudioTimeSyncController audioTimeSyncController, GameplayCoreSceneSetupData gameplayCoreSceneSetupData) {
             this.gamePause = gamePause;
+            this.submission = submission;
             this.pluginConfig = pluginConfig;
             this.presenceController = presenceController;
             this.audioTimeSyncController = audioTimeSyncController;
@@ -150,7 +152,7 @@ namespace BeatSaberPresence {
             formattedString = formattedString.Replace("{SongBPM}", level.beatsPerMinute.ToString());
             formattedString = formattedString.Replace("{LevelID}", level.levelID);
             formattedString = formattedString.Replace("{EnvironmentName}", level.environmentInfo.environmentName);
-            formattedString = formattedString.Replace("{Submission}", "Disabled");
+            formattedString = formattedString.Replace("{Submission}", submission != null ? (submission.Tickets().Length == 0) ? "Disabled" : "Enabled" : "Disabled");
 
 
             formattedString = formattedString.Replace("{NoFail}", (gameplayModifiers.noFailOn0Energy) ? "On" : "Off");
