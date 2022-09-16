@@ -4,7 +4,7 @@
   <horizontal pad-bottom="3" horizontal-fit="PreferredSize" />
 
   <checkbox bind-value="true" value="large-image" apply-on-change="true" text="Large Image" hover-hint="Enables or disables the large Beat Saber cover art image. (if disabled, this will give your text more space)" />
-  <checkbox bind-value="true" value="use-cover-image" apply-on-change="true" text="Large Image Cover" hover-hint="Enables or disables setting the song cover art as the large image. (the large image needs to be enabled to use this)" />
+  <checkbox bind-value="true" value="use-cover-image" apply-on-change="true" text="Large Image Cover" hover-hint="Enables or disables setting the song cover art as the large image. (large image needs to be enabled to use this)" />
   <checkbox bind-value="true" value="small-image" apply-on-change="true" text="        Small Image" hover-hint="Enables or disabled the small box or saber that is shown depending on if you are in a menu or in game. (large image needs to be enabled to use this)" />
   <checkbox bind-value="true" value="show-diff" apply-on-change="true" text="                Show Difficulty" hover-hint="Show the difficulty in the small image. (small image needs to be enabled to use this)" />
   <checkbox bind-value="true" value="show-char" apply-on-change="true" text="                Show Characteristic" hover-hint="Show the characteristic in the small image. (small image needs to be enabled to use this)" />

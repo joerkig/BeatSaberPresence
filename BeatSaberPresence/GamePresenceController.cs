@@ -107,7 +107,7 @@ namespace BeatSaberPresence {
                         exists = false;
                     }
                 }
-                    activity.Assets = new ActivityAssets
+                activity.Assets = new ActivityAssets
                     {
                         LargeImage = level.levelID.StartsWith("custom_level_") && pluginConfig.UseCoverImage && exists ? level.levelID.Replace("custom_level_", "https://cdn.beatsaver.com/").ToLower() + ".jpg" : "beat_saber_logo",
                         LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
