@@ -1,8 +1,8 @@
 <div align="center">
     <br/>
-        <img src="https://i.joerkig.com/e5z141.png" alt="BeatSaberPresence1">
+        <img src="https://i.joerkig.com/dgs4al.png" alt="BeatSaberPresence1">
         <br/>
-        <img src="https://i.joerkig.com/dgs4al.png" alt="BeatSaberPresence2">
+        <img src="https://i.joerkig.com/e5z141.png" alt="BeatSaberPresence2">
     <br/>
     <br/>
     <h1>Beat Saber Presence</h1>
