@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Discord;
 using Zenject;
 using BeatSaberPresence.Config;
@@ -10,14 +11,16 @@ namespace BeatSaberPresence {
         private Activity? pauseActivity;
 
         private readonly IGamePause gamePause;
+        private readonly Submission submission;
         private readonly RichPresenceManager richPresence;
         private readonly PluginConfig pluginConfig;
         private readonly PresenceController presenceController;
         private readonly AudioTimeSyncController audioTimeSyncController;
         private readonly GameplayCoreSceneSetupData gameplayCoreSceneSetupData;
 
-        internal MultiplayerPresenceManager([InjectOptional] IGamePause gamePause, PluginConfig pluginConfig, PresenceController presenceController, AudioTimeSyncController audioTimeSyncController, GameplayCoreSceneSetupData gameplayCoreSceneSetupData) {
+        internal MultiplayerPresenceManager([InjectOptional] IGamePause gamePause, [InjectOptional] Submission submission, PluginConfig pluginConfig, PresenceController presenceController, AudioTimeSyncController audioTimeSyncController, GameplayCoreSceneSetupData gameplayCoreSceneSetupData) {
             this.gamePause = gamePause;
+            this.submission = submission;
             this.pluginConfig = pluginConfig;
             this.presenceController = presenceController;
             this.audioTimeSyncController = audioTimeSyncController;
@@ -93,13 +96,32 @@ namespace BeatSaberPresence {
             }
 
             if (pluginConfig.ShowImages) {
-                activity.Assets = new ActivityAssets {
-                    LargeImage = "beat_saber_logo",
-                    LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
-                };
+                IDifficultyBeatmap diff = gameplayCoreSceneSetupData.difficultyBeatmap;
+                IBeatmapLevel level = diff.level;
+                bool exists = false;
+                if (level.levelID.StartsWith("custom_level_") && pluginConfig.UseCoverImage)
+                {
+                    try
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            client.DownloadString(level.levelID.Replace("custom_level_", "https://cdn.beatsaver.com/").ToLower() + ".jpg");
+                            exists = true;
+                        }
+                    }
+                    catch (WebException)
+                    {
+                        exists = false;
+                    }
+                }
+                activity.Assets = new ActivityAssets
+                    {
+                        LargeImage = level.levelID.StartsWith("custom_level_") && pluginConfig.UseCoverImage && exists ? level.levelID.Replace("custom_level_", "https://cdn.beatsaver.com/").ToLower() + ".jpg" : "beat_saber_logo",
+                        LargeText = Format(paused ? pluginConfig.PauseLargeImageLine : pluginConfig.GameLargeImageLine)
+                    };
 
                 if (pluginConfig.ShowSmallImages) {
-                    activity.Assets.SmallImage = "beat_saber_block";
+                    activity.Assets.SmallImage = pluginConfig.ShowCharacteristic || pluginConfig.ShowDifficulty ? (pluginConfig.ShowCharacteristic ? diff.GetIdentifier().beatmapCharacteristicSerializedName.ToLower() : "") + (pluginConfig.ShowDifficulty ? diff.difficulty.Name().ToLower().Replace("+","_") : "") : "beat_saber_block";
                     activity.Assets.SmallText = Format(paused ? pluginConfig.PauseSmallImageLine : pluginConfig.GameSmallImageLine);
                 }
             }
@@ -126,10 +148,11 @@ namespace BeatSaberPresence {
             formattedString = formattedString.Replace("{SongDurationSeconds}", Math.Floor(level.beatmapLevelData.audioClip.length).ToString());
             formattedString = formattedString.Replace("{LevelAuthorName}", level.levelAuthorName);
             formattedString = formattedString.Replace("{Difficulty}", diff.difficulty.Name());
+            formattedString = formattedString.Replace("{Characteristic}", diff.GetIdentifier().beatmapCharacteristicSerializedName);
             formattedString = formattedString.Replace("{SongBPM}", level.beatsPerMinute.ToString());
             formattedString = formattedString.Replace("{LevelID}", level.levelID);
             formattedString = formattedString.Replace("{EnvironmentName}", level.environmentInfo.environmentName);
-            formattedString = formattedString.Replace("{Submission}", "Disabled");
+            formattedString = formattedString.Replace("{Submission}", submission != null ? (submission.Tickets().Length == 0) ? "Disabled" : "Enabled" : "Disabled");
 
 
             formattedString = formattedString.Replace("{NoFail}", (gameplayModifiers.noFailOn0Energy) ? "On" : "Off");

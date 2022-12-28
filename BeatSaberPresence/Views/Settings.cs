@@ -31,10 +31,30 @@ namespace BeatSaberPresence {
             set => pluginConfig.ShowImages = value;
         }
 
+        [UIValue("use-cover-image")]
+        public bool UseCoverImage {
+            get => pluginConfig.UseCoverImage;
+            set => pluginConfig.UseCoverImage = value;
+        }
+
         [UIValue("small-image")]
         public bool SmallImage {
             get => pluginConfig.ShowSmallImages;
             set => pluginConfig.ShowSmallImages = value;
+        }
+
+        [UIValue("show-diff")]
+        public bool ShowDiff
+        {
+            get => pluginConfig.ShowDifficulty;
+            set => pluginConfig.ShowDifficulty = value;
+        }
+
+        [UIValue("show-char")]
+        public bool ShowChar
+        {
+            get => pluginConfig.ShowCharacteristic;
+            set => pluginConfig.ShowCharacteristic = value;
         }
 
         [UIValue("timer")]
